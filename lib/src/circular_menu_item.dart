@@ -7,7 +7,7 @@ class CircularMenuItem extends StatefulWidget {
   final String? icon;
   final Color? color;
   final Color? iconColor;
-  final  onTap;
+  final VoidCallback onTap;
   final double iconSize;
   final double padding;
   final double margin;
@@ -62,6 +62,7 @@ class _CircularMenuItemState extends State<CircularMenuItem> {
 
   @override
   Widget build(BuildContext context) {
+    print("function is : ${widget.onTap}");
     return InkWell(
       onTap: widget.onTap,
       child: Container(
