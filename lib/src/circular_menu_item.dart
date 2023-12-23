@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CircularMenuItem extends StatelessWidget {
+class CircularMenuItem extends StatefulWidget {
   /// if icon and animatedIcon are passed, icon will be ignored
   final String? icon;
   final Color? color;
@@ -53,10 +53,18 @@ class CircularMenuItem extends StatelessWidget {
       : assert(padding >= 0.0),
         assert(margin >= 0.0);
 
+  @override
+  State<CircularMenuItem> createState() => _CircularMenuItemState();
+}
+
+class _CircularMenuItemState extends State<CircularMenuItem> {
   Widget _buildCircularMenuItem(BuildContext context) {
     return InkWell(
       onTap:  (){
-         onTap();},
+        setState(() {
+        widget.onTap();
+      });
+        },
       child: Container(
         width: 57.w,
         height: 57.w,
@@ -68,16 +76,16 @@ class CircularMenuItem extends StatelessWidget {
         ),
         child: ClipOval(
           child: Material(
-            color: color ?? Theme
+            color: widget.color ?? Theme
                 .of(context)
                 .primaryColor,
             child: Padding(
-              padding: EdgeInsets.all(padding),
-              child: animatedIcon == null
+              padding: EdgeInsets.all(widget.padding),
+              child: widget.animatedIcon == null
                   ? SvgPicture.asset(
-                icon!,
+                widget.icon!,
               )
-                  : animatedIcon,
+                  : widget.animatedIcon,
             ),
 
           ),
@@ -85,7 +93,6 @@ class CircularMenuItem extends StatelessWidget {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
