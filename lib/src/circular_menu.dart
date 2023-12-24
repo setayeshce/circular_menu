@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'circular_menu_item.dart';
 
@@ -221,15 +223,9 @@ class CircularMenuState extends State<CircularMenu>
   }
 
   Widget _buildMenuButton(BuildContext context) {
-    return Positioned.fill(
-      child: Align(
+    return Align(
         alignment: widget.alignment,
-        child: CircularMenuItem(
-          icon: null,
-          margin: widget.toggleButtonMargin,
-          color: widget.toggleButtonColor ?? Theme.of(context).primaryColor,
-          padding: (-_animation.value * widget.toggleButtonPadding * 0.5) +
-              widget.toggleButtonPadding,
+        child: InkWell(
           onTap: () {
             _animationController.status == AnimationStatus.dismissed
                 ? (_animationController).forward()
@@ -238,24 +234,79 @@ class CircularMenuState extends State<CircularMenu>
               widget.toggleButtonOnPressed!();
             }
           },
-          boxShadow: widget.toggleButtonBoxShadow,
-          animatedIcon: AnimatedIcon(
-            icon:
-                widget.toggleButtonAnimatedIconData, //AnimatedIcons.menu_close,
-            size: widget.toggleButtonSize,
-            color: widget.toggleButtonIconColor ?? Colors.white,
-            progress: _animation,
+          child: Container(
+            width: 57.69.w,
+            height: 57.69.w,
+            decoration: ShapeDecoration(
+              color: Color(0xFF31ADC7),
+              shape: OvalBorder(),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SvgPicture.network(
+                "https://c456560.parspack.net/c456560/mainbutton.svg",
+                // Replace with your SVG asset path
+
+                width: 32.w,
+                height: 32.w,
+              ),
+            ),
+
+            // AnimatedBuilder(
+            //   animation: _animation,
+            //   builder: (context, child) {
+            //     return Transform.scale(
+            //       scale: _animation.value, // Scale the icon based on animation value
+            //
+            //     );
+            //   },
+            // ),
           ),
-        ),
-      ),
-    );
+        )
+
+        // CircularMenuItem(
+        //   icon: null,
+        //   margin: widget.toggleButtonMargin,
+        //   color: widget.toggleButtonColor ?? Theme.of(context).primaryColor,
+        //   padding: (-_animation.value * widget.toggleButtonPadding * 0.5) +
+        //       widget.toggleButtonPadding,
+        //   onTap: () {
+        //     _animationController.status == AnimationStatus.dismissed
+        //         ? (_animationController).forward()
+        //         : (_animationController).reverse();
+        //     if (widget.toggleButtonOnPressed != null) {
+        //       widget.toggleButtonOnPressed!();
+        //     }
+        //   },
+        //   boxShadow: widget.toggleButtonBoxShadow,
+        //   animatedIcon:
+        //   AnimatedBuilder(
+        //     animation: _animation,
+        //     builder: (context, child) {
+        //       return Transform.scale(
+        //         scale: _animation.value, // Scale the icon based on animation value
+        //         child: SvgPicture.asset(
+        //          widget.svgMain, // Replace with your SVG asset path
+        //           color: widget.toggleButtonIconColor ?? Colors.white,
+        //         ),
+        //       );
+        //     },
+        //   )
+        //   // AnimatedIcon(
+        //   //   icon:
+        //   //       widget.toggleButtonAnimatedIconData, //AnimatedIcons.menu_close,
+        //   //   size: widget.toggleButtonSize,
+        //   //   color: widget.toggleButtonIconColor ?? Colors.white,
+        //   //   progress: _animation,
+        //   // ),
+        // ),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        widget.backgroundWidget ?? Container(),
         ..._buildMenuItems(),
         _buildMenuButton(context),
       ],

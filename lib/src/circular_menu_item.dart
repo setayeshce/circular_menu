@@ -24,7 +24,7 @@ class CircularMenuItem extends StatefulWidget {
   final Color? badgeColor;
 
   /// if animatedIcon and icon are passed, icon will be ignored
-  final AnimatedIcon? animatedIcon;
+  final AnimatedBuilder? animatedIcon;
 
   /// creates a menu item .
   /// [onTap] must not be null.
@@ -62,8 +62,7 @@ class _CircularMenuItemState extends State<CircularMenuItem> {
 
   @override
   Widget build(BuildContext context) {
-    print("function is : ${widget.onTap}");
-    return InkWell(
+     return InkWell(
       onTap: widget.onTap,
       child: Container(
         width: 57.w,
@@ -82,7 +81,8 @@ class _CircularMenuItemState extends State<CircularMenuItem> {
             child: Padding(
               padding: EdgeInsets.all(widget.padding),
               child: widget.animatedIcon == null
-                  ? SvgPicture.asset(
+                  ?
+              SvgPicture.network(
                 widget.icon!,
               )
                   : widget.animatedIcon,
