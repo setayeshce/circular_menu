@@ -82,7 +82,7 @@ class _CircularMenuItemState extends State<CircularMenuItem> {
               padding: EdgeInsets.all(widget.padding),
               child: widget.animatedIcon == null
                   ?
-              SvgPicture.network(
+              SvgPicture.asset(
                 widget.icon!,
               )
                   : widget.animatedIcon,
