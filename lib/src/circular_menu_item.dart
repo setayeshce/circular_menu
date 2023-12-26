@@ -22,6 +22,7 @@ class CircularMenuItem extends StatefulWidget {
   final String? badgeLabel;
   final Color? badgeTextColor;
   final Color? badgeColor;
+  final VoidCallback? onItemTap;
 
   /// if animatedIcon and icon are passed, icon will be ignored
   final AnimatedBuilder? animatedIcon;
@@ -49,6 +50,7 @@ class CircularMenuItem extends StatefulWidget {
     this.badgeLabel,
     this.badgeTextColor,
     this.badgeColor,
+    this.onItemTap,
   })
       : assert(padding >= 0.0),
         assert(margin >= 0.0);
@@ -63,7 +65,10 @@ class _CircularMenuItemState extends State<CircularMenuItem> {
   @override
   Widget build(BuildContext context) {
      return InkWell(
-      onTap: widget.onTap,
+       onTap: () {
+         widget.onTap();
+         widget.onItemTap?.call();
+       },
       child: Container(
         width: 57.w,
         height: 57.w,

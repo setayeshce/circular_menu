@@ -28,6 +28,8 @@ class CircularMenu extends StatefulWidget {
   /// animation curve in forward
   final Curve curve;
 
+  final  Widget? mainIcon;
+
   /// animation curve in rverse
   final Curve reverseCurve;
 
@@ -55,6 +57,7 @@ class CircularMenu extends StatefulWidget {
     required this.items,
     this.alignment = Alignment.bottomCenter,
     this.radius = 100,
+    this.mainIcon  ,
     this.backgroundWidget,
     this.animationDuration = const Duration(milliseconds: 500),
     this.curve = Curves.bounceOut,
@@ -186,6 +189,9 @@ class CircularMenuState extends State<CircularMenu>
     }
   }
 
+  void closeMenu() {
+    reverseAnimation();
+  }
   @override
   void didUpdateWidget(oldWidget) {
     _configure();
@@ -201,17 +207,28 @@ class CircularMenuState extends State<CircularMenu>
             alignment: widget.alignment,
             child: Transform.translate(
               offset: Offset.fromDirection(
-                  _completeAngle == (2 * math.pi)
-                      ? (_initialAngle +
-                          (_completeAngle! / (_itemsCount)) * index)
-                      : (_initialAngle +
-                          (_completeAngle! / (_itemsCount - 1)) * index),
-                  _animation.value * widget.radius),
+                _completeAngle == (2 * math.pi)
+                    ? (_initialAngle + (_completeAngle! / _itemsCount) * index)
+                    : (_initialAngle + (_completeAngle! / (_itemsCount - 1)) * index),
+                _animation.value * widget.radius,
+              ),
               child: Transform.scale(
                 scale: _animation.value,
                 child: Transform.rotate(
                   angle: _animation.value * (math.pi * 2),
-                  child: item,
+                  child: CircularMenuItem(
+                    icon: item.icon,
+                    color: item.color,
+                    iconColor: item.iconColor,
+                    iconSize: item.iconSize,
+                    padding: item.padding,
+                    margin: item.margin,
+                    boxShadow: item.boxShadow,
+                    onTap: () {
+                      item.onTap();
+                      closeMenu(); // Close menu on item tap
+                    },
+                  ),
                 ),
               ),
             ),
@@ -243,13 +260,10 @@ class CircularMenuState extends State<CircularMenu>
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: SvgPicture.network(
-                "https://c456560.parspack.net/c456560/mainbutton.svg",
-                // Replace with your SVG asset path
+              child:
+              widget.mainIcon,
 
-                width: 32.w,
-                height: 32.w,
-              ),
+
             ),
 
             // AnimatedBuilder(
