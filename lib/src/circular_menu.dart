@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'circular_menu_item.dart';
 
@@ -28,10 +27,12 @@ class CircularMenu extends StatefulWidget {
   /// animation curve in forward
   final Curve curve;
 
-  final  Widget? mainIcon;
+  final Widget? mainIcon;
 
   /// animation curve in rverse
   final Curve reverseCurve;
+
+  final ValueNotifier<bool> closeButton;
 
   /// callback
   final VoidCallback? toggleButtonOnPressed;
@@ -57,13 +58,14 @@ class CircularMenu extends StatefulWidget {
     required this.items,
     this.alignment = Alignment.bottomCenter,
     this.radius = 100,
-    this.mainIcon  ,
+    this.mainIcon,
     this.backgroundWidget,
     this.animationDuration = const Duration(milliseconds: 500),
     this.curve = Curves.bounceOut,
     this.reverseCurve = Curves.fastOutSlowIn,
     this.toggleButtonOnPressed,
     this.toggleButtonColor,
+    required this.closeButton,
     this.toggleButtonBoxShadow,
     this.toggleButtonMargin = 10,
     this.toggleButtonPadding = 10,
@@ -91,6 +93,14 @@ class CircularMenuState extends State<CircularMenu>
   late int _itemsCount;
   late Animation<double> _animation;
 
+  void _handleCloseButtonChange() {
+    if (widget.closeButton.value) {
+      _animationController.reverse();
+    } else {
+      _animationController.forward();
+    }
+  }
+
   /// forward animation
   void forwardAnimation() {
     _animationController.forward();
@@ -104,6 +114,8 @@ class CircularMenuState extends State<CircularMenu>
   @override
   void initState() {
     _configure();
+    widget.closeButton.addListener(_handleCloseButtonChange);
+
     _animationController = AnimationController(
       vsync: this,
       duration: widget.animationDuration,
@@ -192,6 +204,7 @@ class CircularMenuState extends State<CircularMenu>
   void closeMenu() {
     reverseAnimation();
   }
+
   @override
   void didUpdateWidget(oldWidget) {
     _configure();
@@ -209,7 +222,8 @@ class CircularMenuState extends State<CircularMenu>
               offset: Offset.fromDirection(
                 _completeAngle == (2 * math.pi)
                     ? (_initialAngle + (_completeAngle! / _itemsCount) * index)
-                    : (_initialAngle + (_completeAngle! / (_itemsCount - 1)) * index),
+                    : (_initialAngle +
+                        (_completeAngle! / (_itemsCount - 1)) * index),
                 _animation.value * widget.radius,
               ),
               child: Transform.scale(
@@ -260,10 +274,7 @@ class CircularMenuState extends State<CircularMenu>
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child:
-              widget.mainIcon,
-
-
+              child: widget.mainIcon,
             ),
 
             // AnimatedBuilder(
@@ -329,6 +340,7 @@ class CircularMenuState extends State<CircularMenu>
 
   @override
   void dispose() {
+    widget.closeButton.removeListener(_handleCloseButtonChange);
     _animationController.dispose();
     super.dispose();
   }
